@@ -2,19 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using app.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace app.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class PedidoController : Controller
     {
-        // GET api/values
+        readonly IPedidoService _pedidoService; 
+
+        public PedidoController(IPedidoService pedidoService){
+            _pedidoService = pedidoService ?? throw new ArgumentNullException(nameof(pedidoService));
+        }
+        
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> ReadAllAsync()
         {
-            return new string[] { "value1", "value2" };
+             var pedidos = await _pedidoService.ReadAllAsync();
+             return Ok(pedidos);
         }
 
         // GET api/values/5
@@ -26,8 +33,10 @@ namespace app.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<IActionResult> CreateAsync()
         {
+            var pedido = await _pedidoService.CreateAsync();
+            return Ok(pedido);
         }
 
         // PUT api/values/5
