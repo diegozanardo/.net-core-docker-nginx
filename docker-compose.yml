@@ -16,7 +16,13 @@ services:
       context:  ./app
     expose:
       - "5000"
- 
+
+  web:
+    build:
+      context: ./web
+    ports: 
+        - "8080:80"
+
   proxy:
     build:
       context:  ./nginx
